@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 点击时的背景颜色 -->
+    <item
+        android:state_pressed="true"
+        >
+        <shape>
+            <solid android:color="#50CCCCCC" />
+        </shape>
+    </item>
+    <!-- focused state -->
+    <item
+        android:state_focused="true">
+        <shape>
+            <solid android:color="#50CCCCCC" />
+        </shape>
+    </item>
+
+    <!-- 默认的背景颜色 -->
+    <item>
+        <shape>
+            <solid android:color="@color/white" />
+        </shape>
+    </item>
+</selector>

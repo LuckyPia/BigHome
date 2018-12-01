@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">邻里</string>
+
+    <!--login start-->
+    <string name="login_account_hint_text">账号</string>
+    <string name="login_password_hint_text">密码</string>
+
+    <string name="sign_up_account_hint_text">请输入您的账号(必填)</string>
+    <string name="sign_up_password_hint_text">请输入您的密码(必填)</string>
+    <string name="sign_up_re_password_hint_text">请再次输入您的密码(必填)</string>
+    <string name="sign_up_phone">电话号码(选填)</string>
+    <string name="sign_up_email">电子邮件(选填)</string>
+    <string name="login_btn_login">登录</string>
+    <string name="login_btn_sign_up">注册并登录</string>
+    <string name="link_to_sign_up">去注册→</string>
+    <string name="link_to_login">←去登录</string>
+    <string name="input_error">你输入的有非法字符</string>
+    <string name="terms_error">请先同意服务协议</string>
+    <string name="repassword_not_match">密码不匹配，请确认您的密码</string>
+    <string name="terms">登录即代表同意服务协议</string>
+    <string name="auto_login">自动登录</string>
+    <string name="remember_password">记住密码</string>
+    <!--login end-->
+
+    <!--terms of service-->
+    <string name="terms_of_service">1.此APP仅供学习参考，不得用做其他商务用途！\n
+                        3.开发者真帅\n</string>
+    <!--terms of service-->
+
+    <!--Error-->
+    <string name="network_error">网络不可用</string>
+    <!--Error-->
+
+    <!--Warning-->
+    <!--Warning-->
+
+    <string name="title">(Android WebSockets Chat App)</string>
+    <string name="author_name">By Ravi Tamada</string>
+    <string name="author_url">www.androidhive.info</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="btn_join">JOIN</string>
+    <string name="btn_send">Send</string>
+
+</resources>

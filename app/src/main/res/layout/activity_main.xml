@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"/>
+
+    <eu.long1.spacetablayout.SpaceTabLayout
+        android:id="@+id/spaceTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tab_color="@color/tab_color"
+        app:button_color="@color/colorAccent"
+        app:text_color="@color/white"
+        app:layout_behavior="eu.long1.spacetablayout.SpaceTabLayoutBehavior"/>
+
+</android.support.design.widget.CoordinatorLayout>

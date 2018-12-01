@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:addStatesFromChildren="true"
+    android:fitsSystemWindows="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+<android.support.design.widget.CoordinatorLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:fitsSystemWindows="false"
+        android:clipChildren="false"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="false"
+            android:clipChildren="false"
+            app:titleEnabled="false"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <com.youth.banner.Banner
+                android:id="@+id/banner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="false"
+                android:scaleType="centerCrop"
+                app:layout_collapseParallaxMultiplier="1"/>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetStart="0dp"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+                <android.support.v7.widget.AppCompatImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="16dp"
+                    android:id="@+id/imagebutton_scan"
+                    android:background="@drawable/scan"
+                    android:backgroundTint="@color/white"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:drawablePadding="5dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:text="推荐"
+                    android:shadowColor="@color/black"
+                    android:shadowDx="1"
+                    android:shadowDy="1"
+                    android:shadowRadius="1"
+                    android:id="@+id/tv_title"
+                    android:scrollHorizontally="true"
+                    android:textColor="@color/black"/>
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <android.support.v7.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/layout_background"
+                android:orientation="vertical">
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:stretchColumns="*"
+                    android:padding="4dip">
+                    <TableRow>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                android:src="@drawable/ic_vpn_key_black_24dp"
+                                style="@style/ImageButtonStyle" />
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="一键开门"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_account_balance_wallet_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="在线缴费"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_build_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="在线报修"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_volume_up_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="小区公告"/>
+                        </LinearLayout>
+
+                    </TableRow>
+                    <TableRow>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_assignment_ind_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="专属管家"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_widgets_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="我的邮包"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_local_florist_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                style="@style/TextViewStyle"
+                                android:text="投诉表扬"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@drawable/linearlayout_selector"
+                            style="@style/LinearLayoutClickable">
+                            <android.support.v7.widget.AppCompatImageButton
+                                style="@style/ImageButtonStyle"
+                                android:src="@drawable/ic_portrait_black_24dp"/>
+                            <android.support.v7.widget.AppCompatTextView
+                                android:text="访客邀请"
+                                style="@style/TextViewStyle" />
+                        </LinearLayout>
+                    </TableRow>
+                </TableLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:orientation="horizontal">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorSecondaryText"
+                            android:layout_marginStart="16dp"
+                            android:textSize="12sp"
+                            android:layout_weight="9"
+                            android:text="成都今日  多云  20℃"/>
+
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorSecondaryText"
+                            android:textSize="12sp"
+                            android:layout_weight="1"
+                            android:text="车辆限行 1 6"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
+                        android:orientation="horizontal">
+                        <android.support.v7.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:text="小区公告丨今日我小区破获一起凶杀案"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:background="@color/white"
+                    android:orientation="vertical">
+
+                </LinearLayout>
+            </android.support.v7.widget.LinearLayoutCompat>
+        </android.support.v4.widget.NestedScrollView>
+
+
+
+</android.support.design.widget.CoordinatorLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
