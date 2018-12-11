@@ -582,7 +582,7 @@ LoginFragment
 至此，我们就完成登录功能的基本搭建了。没有细写显示数据是因为每一个人的设计理念都不一样，每个人都有不同的实现方式。  
 
 接下来的获取商城信息等操作与这部分操作没有多大差异，就不一一细说了，大致的流程如下  
-![流程图](https://github.com/LuckyPia/BigHome/blob/master/640(1).webp "流程")  
+![流程图](https://github.com/LuckyPia/BigHome/blob/master/640 (1).webp "流程")  
 
 **侧滑返回的实现**  
 
