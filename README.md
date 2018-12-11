@@ -47,13 +47,9 @@
 **界面里的图标Icon**  
 为了遵循Material Design， 尽量在AS自带的图标里选取  
 在本APP的设计中，我用BottomNavigationView作为顶级导航。界面的设计效果如下。  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/1.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/2.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/3.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/4.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/5.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/6.jpg "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/7.jpg "截图")  
+<img src="https://github.com/LuckyPia/BigHome/blob/master/1.jpg" width = "100" height = "100" div align=right />  
+
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/截图.png "截图")  
 
 ## 代码编写(以登录为例）
 
