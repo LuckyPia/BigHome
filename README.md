@@ -1,4 +1,3 @@
-# BigHome  
 # 智慧小区APP-邻里  
 本APP采用了MVP+Retrofit+RXJAVA的架构。是一款基于**嘉宝生活家APP**进行开发的应用。  
 
