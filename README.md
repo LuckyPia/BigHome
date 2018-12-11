@@ -589,14 +589,17 @@ LoginFragment
 关于侧滑返回，我认为这是一个非常有必要的功能，毕竟它能够很好的提升用户体验。  
 这里我们使用了第三方开源库BGASwipeBackLayout-Android。  
 导入就能使用，非常方便。  
->implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0'
+>implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0'  
 ![效果图](图片地址 "效果图")  
 
 
 ## 结语  
-
+本次邻里项目时间非常紧张，加之中间一段时间去忙其他项目，所以邻里还有很多功能未能实现，注册时上传头像实在是没时间做了，再加本身对智慧小区的一些功能未能掌握，所以本次的项目未能达到预期效果，非常抱歉！  
 
 ## 致谢  
+本次项目用了很多第三方库，特别鸣谢它们提供的库！  
+感谢我的三位队友，没有他们，我的结题报告真的不知道怎么写（笑哭）！  
+
 
 
 
