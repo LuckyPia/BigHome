@@ -141,3 +141,464 @@ public class LoginDetailData extends RealmObject {
 
 }
 ```  
+
+**网络请求库代码编写（只显示关键代码）**  
+
+在网络请求框架上我选择的是Retrofit+RxJava。  
+
+首先就是写API  
+```java
+public class Api {
+
+    //This is the base API.
+    public static  String API_BASE = "http://www.liuchaun.com/";
+
+    //Get the banner
+    public static  String BANNER = "wisdom_newest/img/slide2.jpg";
+
+    //Login
+    public static  String LOGIN = "wisdom_newest/login";
+
+    //Register
+    public static  String REGISTER = "wisdom_newest/saveuser";
+
+    public static  String PROFILE = "wisdom_newest/profile";
+    public static  String SVAE_USER = "wisdom_newest/saveuser";
+    
+    public static final String SHOP_URL="http://api.map.baidu.com/place/v2/search";
+    
+}
+```  
+接下来是创建相关的Retrofit文件。  
+
+RetrofitClient  
+```java
+public class RetrofitClient {
+    private RetrofitClient() {
+    }
+
+    private static class ClientHolder{
+
+        private static OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new CookieManger(MyApp.getContext()))
+                .build();
+
+        private static Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Api.API_BASE)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+    }
+
+    public static Retrofit getInstance(){
+        return ClientHolder.retrofit;
+    }
+}
+```  
+RetrofitService  
+```java
+public interface RetrofitService {
+
+    @FormUrlEncoded
+    @POST()
+    Observable<LoginData> login(@Url String path, @Field("name") String username, @Field("password") String password);
+
+    @Multipart
+    @POST()
+    Observable<LoginData> profile(@Url String path, @Part List<MultipartBody.Part> file);
+
+    @FormUrlEncoded
+    @POST()
+    Observable<LoginData> saveUser(@Url String path,@Field("name") String username, @Field("password") String password,@Field("iconpath") String iconpath);
+
+    @GET()
+    Observable<BannerData> getBanner(@Url String path);
+
+    @GET()
+    Observable<ResponseBody> getShop(@Url String path, @Query("query") String query, @Query("region") String region, @Query(value="output",encoded = true) String output, @Query(value="ak",encoded = true) String ak);
+}
+```
+
+
+你可能会问什么是Rxjava，Rxjava就是在观察者模式的骨架下，通过丰富的操作符和便捷的异步操作来完成对于复杂业务的处理的框架。可以参考扔物线写的《给 Android 开发者的 RxJava 详解》 https://gank.io/post/560e15be2dca930e00da1083 ，需要指出的是里面有些内容是过时的，不过这篇文章对RxJava讲的很浅显易懂，所以还是推荐它用于入门。  
+
+**Model层构建（只显示关键代码）**
+
+LoginDataSource  
+```java
+public interface LoginDataSource {
+
+    Observable<LoginData> getRemoteLoginData(@NonNull String userName, @NonNull String password, @NonNull LoginType loginType);
+
+    Observable<LoginDetailData> getLocalLoginData(@NonNull int userId);
+    
+}
+```  
+LoginDataRemoteSource  
+```java
+public class LoginDataRemoteSource implements LoginDataSource {
+    @NonNull
+    private static LoginDataRemoteSource INSTANCE;
+
+    private LoginDataRemoteSource(){
+
+    }
+
+    public static LoginDataRemoteSource getInstance(){
+        if (INSTANCE == null) {
+            INSTANCE = new LoginDataRemoteSource();
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public Observable<LoginData> getRemoteLoginData(@NonNull String userName, @NonNull String password, @NonNull LoginType loginType) {
+        Observable<LoginData> loginDataObservable = null;
+
+
+        if (loginType==LoginType.TYPE_REGISTER){
+            MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)//表单类型
+                    .addFormDataPart("uname",userName);
+            RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), encodeImage());
+            builder.addFormDataPart("file", "img", imageBody);//imgfile 后台接收图片流的参数名
+
+            List<MultipartBody.Part> parts = builder.build().parts();
+
+            loginDataObservable = RetrofitClient.getInstance()
+                    .create(RetrofitService.class)
+                    .profile(Api.PROFILE,parts);
+            return loginDataObservable;
+
+        }else{
+
+            loginDataObservable=RetrofitClient.getInstance()
+                    .create(RetrofitService.class)
+                    .login(Api.LOGIN,userName, password);
+
+            return loginDataObservable
+                    .subscribeOn(Schedulers.io())
+                    .doOnNext(new Consumer<LoginData>() {
+                        @Override
+                        public void accept(LoginData loginData) {
+                /*if (loginData.getCode()!=200||loginData.getExtendMap() != null) {
+                    // It is necessary to build a new realm instance
+                    // in a different thread.
+                    Realm realm = Realm.getInstance(new RealmConfiguration.Builder()
+                            .name(RealmHelper.DATABASE_NAME)
+                            .deleteRealmIfMigrationNeeded()
+                            .build());
+
+                    realm.beginTransaction();
+                    realm.copyToRealmOrUpdate(loginData.getExtendMap());
+                    realm.commitTransaction();
+                    realm.close();
+                }*/
+                        }
+                    });
+        }
+
+    }
+
+    @Override
+    public Observable<LoginDetailData> getLocalLoginData(@NonNull int userId) {
+        //Not required because the {@link LoginDataLocalSource} has handled it
+        return null;
+    }
+
+    public static String encodeImage(){
+        Bitmap bitmap=BitmapFactory.decodeResource(MyApp.getContext().getResources(), R.drawable.bg_messages);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //读取图片到ByteArrayOutputStream
+        bitmap.compress(Bitmap.CompressFormat.PNG, 40, baos); //参数如果为100那么就不压缩
+        byte[] bytes = baos.toByteArray();
+        return Base64.encodeToString(bytes,Base64.DEFAULT);
+    }
+
+}
+```  
+LoginDataRepository  
+```java
+public class LoginDataRepository implements LoginDataSource{
+    @NonNull
+    private LoginDataSource localDataSource;
+    @NonNull
+    private LoginDataSource remoteDataSource;
+
+    private LoginDataRepository(@NonNull LoginDataSource localDataSource, @NonNull LoginDataSource remoteDataSource){
+        this.localDataSource = localDataSource;
+        this.remoteDataSource = remoteDataSource;
+    }
+    @NonNull
+    private static LoginDataRepository INSTANCE;
+
+    public static LoginDataRepository getInstance(@NonNull LoginDataSource localDataSource,@NonNull LoginDataSource remoteDataSource){
+        if (INSTANCE == null) {
+            INSTANCE = new LoginDataRepository(localDataSource, remoteDataSource);
+        }
+        return INSTANCE;
+    }
+
+    @Override
+    public Observable<LoginData> getRemoteLoginData(@NonNull String userName, @NonNull String password, @NonNull LoginType loginType) {
+        return remoteDataSource.getRemoteLoginData(userName, password,loginType);
+    }
+
+    @Override
+    public Observable<LoginDetailData> getLocalLoginData(@NonNull int userId) {
+        return localDataSource.getLocalLoginData(userId);
+    }
+    
+}
+```  
+
+**界面代码编写（只显示关键代码）**  
+子界面xml  
+```xml
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp"
+        android:background="@color/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimaryText"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:visibility="invisible"
+            android:textSize="14sp"
+            android:gravity="center"/>
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>
+```  
+
+**View层和Present层**  
+既然采用的是MVP+RXJAVA，如果你对此不是很懂的话，可以看下谷歌的官方项目todo‑mvp‑rxjava https://github.com/googlesamples/android-architecture/tree/todo-mvp-rxjava/ 。  
+
+MVP就指的是Mpdel-View-Present。MVP模式的核心思想就是把视图中的UI逻辑抽象成View接口，把业务逻辑抽象成Presenter接口。也就是视图就只负责显示，其它的逻辑都交给了Presenter。这样就大大降低了代码的耦合，提高代码的可阅读性。  
+![Modle-View-Presenter](图片地址 "Modle-View-Presenter")  
+
+Model层我们前面已经写好了，那么就剩下View层和Present层了。首先就是写BasePresenter和BaseView。  
+BasePresenter  
+```java
+public interface BasePresenter {
+    void subscribe();
+    void unSubscribe();
+}
+```  
+BaseView  
+```java
+public interface BaseView<T> {
+    void initViews(View view);
+    void setPresenter(T presenter);
+}
+```  
+LoginContract,契约类  
+```java
+public interface LoginContract {
+    interface Presenter extends BasePresenter {
+        void login(String username, String password, @NonNull LoginType loginType);
+
+        void clearReadLaterData();
+
+    }
+
+    interface View extends BaseView<Presenter> {
+        void showLoginError(String errorMsg);
+
+        boolean isActive();
+
+        void saveUserPreference(LoginDetailData loginDetailData);
+
+        void showNetworkError();
+    }
+}
+```  
+LoginPresenter,从Model层获取数据  
+```java
+public class LoginPresenter implements LoginContract.Presenter{
+
+    @NonNull
+    private LoginContract.View view;
+    @NonNull
+    private LoginDataRepository repository;
+
+    private CompositeDisposable compositeDisposable;
+
+    public LoginPresenter(@NonNull LoginContract.View view, @NonNull LoginDataRepository loginDataRepository) {
+        this.view = view;
+        this.repository = loginDataRepository;
+        this.view.setPresenter(this);
+        compositeDisposable = new CompositeDisposable();
+    }
+
+    @Override
+    public void login(String username, String password, @NonNull LoginType loginType) {
+        getLoginData(username, password,loginType);
+    }
+
+    private void getLoginData(final String username, final String password, @NonNull final LoginType loginType){
+        Disposable disposable=repository.getRemoteLoginData(username, password,loginType)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableObserver<LoginData>() {
+
+                    @Override
+                    public void onNext(LoginData value) {
+                        if (!view.isActive()) {
+                            return;
+
+                        }
+                        if (value.getCode()==200){
+                            view.showLoginError(value.getMsg());
+                        }else {
+                            value.getExtendMap().setUsername(username);
+                            value.getExtendMap().setPassword(password);
+
+                            view.saveUserPreference(value.getExtendMap());
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (view.isActive()) {
+                            view.showNetworkError();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void clearReadLaterData() {
+    }
+
+    @Override
+    public void subscribe() {
+
+    }
+
+    @Override
+    public void unSubscribe() {
+        compositeDisposable.clear();
+    }
+}
+```  
+
+LoginFragment  
+>代码量过大这里只展示一部分 
+```java
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        ButterKnife.bind(this,view);
+
+        terms();
+        cbTerms.setChecked(sp.getBoolean(SettingsUtil.TERMS_OF_SERVICE, false));
+        cbAutoLogin.setChecked(sp.getBoolean(SettingsUtil.AUTO_LOGIN, false));
+        cbRememberPassword.setChecked(sp.getBoolean(SettingsUtil.REMEMBER_PASSWORD, false));
+
+        if(cbTerms.isChecked()){
+            btnLogin.setBackgroundDrawable(ContextCompat.getDrawable(loginActivity,R.drawable.button_selector));
+            linkSignUp.setTextColor(ContextCompat.getColor(loginActivity,R.color.colorPrimaryText));
+            tvTerms.setTextColor(ContextCompat.getColor(loginActivity,R.color.iron));
+        }
+
+        if(sp.getBoolean(SettingsUtil.REMEMBER_PASSWORD, false)){
+            if (sp.getBoolean(SettingsUtil.KEY_SKIP_LOGIN_PAGE, false)){
+                String username=sp.getString(SettingsUtil.USERNAME, null);
+                String password=sp.getString(SettingsUtil.PASSWORD, null);
+                editUserName.setText(username);
+                editPassword.setText(password);
+            }
+        }
+
+        linearLayout.setOnClickListener(this);
+        linearLayout.setOnTouchListener(this);
+        linkSignUp.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
+        cbTerms.setOnCheckedChangeListener(this);
+        cbAutoLogin.setOnCheckedChangeListener(this);
+        cbRememberPassword.setOnCheckedChangeListener(this);
+        tvTerms.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        loginActivity = (LoginActivity) getActivity();
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+        if(sp.getBoolean(SettingsUtil.AUTO_LOGIN, false)){
+            if (sp.getBoolean(SettingsUtil.KEY_SKIP_LOGIN_PAGE, false)) {
+                if(sp.getBoolean(SettingsUtil.TERMS_OF_SERVICE, false)){
+                    showProgressDialog();
+                    final String username=sp.getString(SettingsUtil.USERNAME, null);
+                    final String password=sp.getString(SettingsUtil.PASSWORD, null);
+                    new Handler().postDelayed(new Runnable(){
+                        public void run() {
+                            //Login
+                            presenter.login(username,password, LoginType.TYPE_LOGIN);
+                        }
+                    }, 1000);
+                }
+            }
+        }
+
+    }
+```  
+
+至此，我们就完成登录功能的基本搭建了。没有细写显示数据是因为每一个人的设计理念都不一样，每个人都有不同的实现方式。  
+
+接下来的获取商城信息等操作与这部分操作没有多大差异，就不一一细说了，大致的流程如下  
+![流程图](图片地址 "流程")  
+
+**侧滑返回的实现**  
+
+关于侧滑返回，我认为这是一个非常有必要的功能，毕竟它能够很好的提升用户体验。  
+这里我们使用了第三方开源库BGASwipeBackLayout-Android。  
+导入就能使用，非常方便。  
+>implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0'
+![效果图](图片地址 "效果图")  
+
+
+## 结语  
+
+
+## 致谢  
+
+
+
+
+
