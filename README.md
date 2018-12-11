@@ -47,13 +47,13 @@
 **界面里的图标Icon**  
 为了遵循Material Design， 尽量在AS自带的图标里选取  
 在本APP的设计中，我用BottomNavigationView作为顶级导航。界面的设计效果如下。  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/1.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/2.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/3.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/4.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/5.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/6.png "截图")  
-![软件截图](https://github.com/LuckyPia/BigHome/blob/master/7.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/1.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/2.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/3.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/4.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/5.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/6.jpg "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/blob/master/7.jpg "截图")  
 
 ## 代码编写(以登录为例）
 
@@ -587,7 +587,7 @@ LoginFragment
 至此，我们就完成登录功能的基本搭建了。没有细写显示数据是因为每一个人的设计理念都不一样，每个人都有不同的实现方式。  
 
 接下来的获取商城信息等操作与这部分操作没有多大差异，就不一一细说了，大致的流程如下  
-![流程图](https://github.com/LuckyPia/BigHome/blob/master/640.webp(1) "流程")  
+![流程图](https://github.com/LuckyPia/BigHome/blob/master/640(1).webp "流程")  
 
 **侧滑返回的实现**  
 
