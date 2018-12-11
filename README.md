@@ -36,7 +36,7 @@
 
 这里要推荐下一款好用的网页调试软件Postman。当你在postman发送相关的API后，Postman就会返回可读性强的结果。  
 >https://www.getpostman.com/  
-![Postman](图片地址 "Postman")  
+![Postman](https://github.com/LuckyPia/BigHome/postman截图.png "Postman")  
 
 ## 界面UI设计  
 
@@ -47,7 +47,13 @@
 **界面里的图标Icon**  
 为了遵循Material Design， 尽量在AS自带的图标里选取  
 在本APP的设计中，我用BottomNavigationView作为顶级导航。界面的设计效果如下。  
-![软件截图](图片地址 "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/1.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/2.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/3.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/4.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/5.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/6.png "截图")  
+![软件截图](https://github.com/LuckyPia/BigHome/7.png "截图")  
 
 ## 代码编写(以登录为例）
 
@@ -398,7 +404,7 @@ public class LoginDataRepository implements LoginDataSource{
 既然采用的是MVP+RXJAVA，如果你对此不是很懂的话，可以看下谷歌的官方项目todo‑mvp‑rxjava https://github.com/googlesamples/android-architecture/tree/todo-mvp-rxjava/ 。  
 
 MVP就指的是Mpdel-View-Present。MVP模式的核心思想就是把视图中的UI逻辑抽象成View接口，把业务逻辑抽象成Presenter接口。也就是视图就只负责显示，其它的逻辑都交给了Presenter。这样就大大降低了代码的耦合，提高代码的可阅读性。  
-![Modle-View-Presenter](图片地址 "Modle-View-Presenter")  
+![Modle-View-Presenter](https://github.com/LuckyPia/BigHome/640.webp "Modle-View-Presenter")  
 
 Model层我们前面已经写好了，那么就剩下View层和Present层了。首先就是写BasePresenter和BaseView。  
 BasePresenter  
@@ -581,7 +587,7 @@ LoginFragment
 至此，我们就完成登录功能的基本搭建了。没有细写显示数据是因为每一个人的设计理念都不一样，每个人都有不同的实现方式。  
 
 接下来的获取商城信息等操作与这部分操作没有多大差异，就不一一细说了，大致的流程如下  
-![流程图](图片地址 "流程")  
+![流程图](https://github.com/LuckyPia/BigHome/640.webp(1) "流程")  
 
 **侧滑返回的实现**  
 
@@ -589,7 +595,6 @@ LoginFragment
 这里我们使用了第三方开源库BGASwipeBackLayout-Android。  
 导入就能使用，非常方便。  
 >implementation 'cn.bingoogolapple:bga-swipebacklayout:1.2.0'  
-![效果图](图片地址 "效果图")  
 
 
 ## 结语  
@@ -598,6 +603,23 @@ LoginFragment
 ## 致谢  
 本次项目用了很多第三方库，特别鸣谢它们提供的库！  
 感谢我的三位队友，没有他们，我的结题报告真的不知道怎么写（笑哭）！  
+
+## License
+```
+Copyright 2018 CoderLengary
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```  
 
 
 
